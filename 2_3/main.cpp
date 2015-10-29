@@ -35,8 +35,24 @@ class BSTree{
      return NULL;
    }
 
+   TreeNode* minimum(TreeNode* v){
+     TreeNode* current = v;
+     while (v->left != NULL){
+       current = current->left;
+     }
+     return current; 
+   }
+
    TreeNode* successor(TreeNode* v){
-     
+    if (v->right != NULL){
+      return minimum(v);
+    } 
+    TreeNode* y = v->parent;
+    while ((y != NULL) && (v == y->left)){
+      v = v->parent;
+      y = y->parent;
+    }
+    return v;
    }
 
    bool insert(int _val){
@@ -71,16 +87,39 @@ class BSTree{
      
    }
 
-   bool remove(TreeNode* v){
+   TreeNode* remove(TreeNode* v){
+     //Returns the parent of the deleted ndoe y
      //find y
      TreeNode* y = NULL;
+     TreeNode* trace_start = NULL;
+     TreeNode* x = NULL;
      if ((v->right == NULL) || (v->left == NULL)){
        y = v;
      } 
      else {
        y = successor(root);
      }
-     return true;
+     trace_start = y->parent;
+     
+     if (y->right != NULL){
+       x = y->right;
+     }
+     x->parent = y->parent;
+     if (x->parent == NULL){
+       root = x;
+     }
+     
+     if (y == y->parent->left){
+       x = y->parent->left;
+     }
+     else {
+       x = y->parent->right;
+     }
+     //delete the point
+     
+
+
+     return y->parent;
      
    }
 
